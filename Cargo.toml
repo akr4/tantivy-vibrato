@@ -1,0 +1,9 @@
+[package]
+name = "tantivy-vibrato"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tantivy = "0.18.0"
+thiserror = "1.0.32"
+vibrato = "0.1.1"
