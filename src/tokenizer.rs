@@ -3,6 +3,7 @@ use std::io;
 use std::io::BufReader;
 use std::path;
 use std::sync::Arc;
+use log::error;
 use thiserror::Error;
 
 use tantivy::tokenizer::{BoxTokenStream, Token as TToken, TokenStream, Tokenizer as TTokenizer};
@@ -38,9 +39,10 @@ impl VibratoTokenizer {
 
 impl TTokenizer for VibratoTokenizer {
     fn token_stream<'a>(&self, text: &'a str) -> BoxTokenStream<'a> {
-        let tokenizer = self.tokenizer.clone();
-        let mut worker = tokenizer.new_worker();
-        worker.reset_sentence(text).unwrap();
+        let mut worker = self.tokenizer.new_worker();
+        worker.reset_sentence(text).unwrap_or_else(|e| {
+            error!("Failed to reset sentence: {}", e);
+        });
         worker.tokenize();
 
         let tokens = worker

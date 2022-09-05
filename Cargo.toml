@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tantivy = "0.18.0"
+log = "0.4.17"
+tantivy = { path = "../ake/tantivy" }
 thiserror = "1.0.32"
 vibrato = "0.1.1"
