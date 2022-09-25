@@ -1,9 +1,9 @@
+use log::error;
 use std::fs;
 use std::io;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 use std::path;
 use std::sync::Arc;
-use log::error;
 use thiserror::Error;
 
 use tantivy::tokenizer::{BoxTokenStream, Token as TToken, TokenStream, Tokenizer as TTokenizer};
@@ -30,7 +30,14 @@ impl VibratoTokenizer {
     /// - `dict_path` is the path to the Vibrato dictionary file.
     pub fn new<P: AsRef<path::Path>>(dict_path: P) -> Result<VibratoTokenizer> {
         let file = fs::File::open(&dict_path)?;
-        let dict = Dictionary::read(BufReader::new(file))?;
+        Self::from_reader(file)
+    }
+
+    /// Create a new `VibratoTokenizer`.
+    ///
+    /// - `reader` is a reader of the Vibrato dictionary file.
+    pub fn from_reader<R: Read>(reader: R) -> Result<VibratoTokenizer> {
+        let dict = Dictionary::read(BufReader::new(reader))?;
         let tokenizer = Arc::new(Tokenizer::new(dict));
 
         Ok(VibratoTokenizer { tokenizer })
