@@ -7,4 +7,4 @@ edition = "2021"
 log = "0.4.17"
 tantivy = { path = "../ake/tantivy" }
 thiserror = "1.0.32"
-vibrato = "0.1.1"
+vibrato = "0.2"
