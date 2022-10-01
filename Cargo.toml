@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 log = "0.4.17"
-tantivy = { path = "../ake/tantivy" }
+tantivy = { git = "https://github.com/quickwit-oss/tantivy.git", rev = "b4b4f3fa73987a3572b572e5a3ebc50b22fa82aa" }
 thiserror = "1.0.32"
 vibrato = "0.2"
+
