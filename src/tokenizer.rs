@@ -47,9 +47,7 @@ impl VibratoTokenizer {
 impl TTokenizer for VibratoTokenizer {
     fn token_stream<'a>(&self, text: &'a str) -> BoxTokenStream<'a> {
         let mut worker = self.tokenizer.new_worker();
-        worker.reset_sentence(text).unwrap_or_else(|e| {
-            error!("Failed to reset sentence: {}", e);
-        });
+        worker.reset_sentence(text);
         worker.tokenize();
 
         let tokens = worker

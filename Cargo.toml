@@ -1,11 +1,11 @@
 [package]
 name = "tantivy-vibrato"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 
 [dependencies]
 log = "0.4.17"
-tantivy = { git = "https://github.com/quickwit-oss/tantivy.git", rev = "b4b4f3fa73987a3572b572e5a3ebc50b22fa82aa" }
+tantivy = "0.19.1"
 thiserror = "1.0.32"
-vibrato = "0.2"
+vibrato = "0.3.3"
 
