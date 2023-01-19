@@ -2,6 +2,8 @@
 
 A [Tantivy](https://github.com/quickwit-oss/tantivy) tokenizer using [Vibrato](https://github.com/daac-tools/vibrato).
 
+<a href="https://crates.io/crates/tantivy-vibrato">![Crates.io](https://img.shields.io/crates/v/tantivy-vibrato)</a>
+
 ## Usage
 
 ```rust
