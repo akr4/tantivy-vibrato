@@ -2,6 +2,9 @@
 name = "tantivy-vibrato"
 version = "0.3.0"
 edition = "2021"
+license-file = "LICENSE"
+repository = "https://github.com/akr4/tantivy-vibrato"
+description = "A Tantivy tokenizer using Vibrato."
 
 [dependencies]
 log = "0.4.17"
