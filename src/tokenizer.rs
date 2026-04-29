@@ -1,4 +1,3 @@
-use log::error;
 use std::fs;
 use std::io;
 use std::io::{BufReader, Read};
@@ -45,7 +44,9 @@ impl VibratoTokenizer {
 }
 
 impl TTokenizer for VibratoTokenizer {
-    fn token_stream<'a>(&self, text: &'a str) -> BoxTokenStream<'a> {
+    type TokenStream<'a> = BoxTokenStream<'a>;
+
+    fn token_stream<'a>(&'a mut self, text: &'a str) -> BoxTokenStream<'a> {
         let mut worker = self.tokenizer.new_worker();
         worker.reset_sentence(text);
         worker.tokenize();
@@ -66,7 +67,7 @@ impl TTokenizer for VibratoTokenizer {
             index: None,
         };
 
-        BoxTokenStream::from(stream)
+        BoxTokenStream::new(stream)
     }
 }
 
@@ -106,7 +107,7 @@ mod tests {
 
     #[test]
     fn test1() {
-        let tokenizer = tokenizer();
+        let mut tokenizer = tokenizer();
         let mut stream = tokenizer.token_stream("すもももももももものうち");
         let mut tokens = vec![];
         while let Some(token) = stream.next() {
@@ -167,7 +168,7 @@ mod tests {
 
     #[test]
     fn empty() {
-        let tokenizer = tokenizer();
+        let mut tokenizer = tokenizer();
         let mut stream = tokenizer.token_stream("");
         let mut tokens = vec![];
         while let Some(token) = stream.next() {

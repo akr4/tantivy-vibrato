@@ -7,8 +7,7 @@ repository = "https://github.com/akr4/tantivy-vibrato"
 description = "A Tantivy tokenizer using Vibrato."
 
 [dependencies]
-log = "0.4.17"
-tantivy = "0.19.1"
-thiserror = "1.0.32"
-vibrato = "0.3.3"
+tantivy = "0.26"
+thiserror = "2"
+vibrato = "0.5"
 
