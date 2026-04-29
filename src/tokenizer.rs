@@ -1,4 +1,3 @@
-use log::error;
 use std::fs;
 use std::io;
 use std::io::{BufReader, Read};
@@ -45,7 +44,9 @@ impl VibratoTokenizer {
 }
 
 impl TTokenizer for VibratoTokenizer {
-    fn token_stream<'a>(&self, text: &'a str) -> BoxTokenStream<'a> {
+    type TokenStream<'a> = BoxTokenStream<'a>;
+
+    fn token_stream<'a>(&'a mut self, text: &'a str) -> BoxTokenStream<'a> {
         let mut worker = self.tokenizer.new_worker();
         worker.reset_sentence(text);
         worker.tokenize();
@@ -66,7 +67,7 @@ impl TTokenizer for VibratoTokenizer {
             index: None,
         };
 
-        BoxTokenStream::from(stream)
+        BoxTokenStream::new(stream)
     }
 }
 
@@ -106,7 +107,7 @@ mod tests {
 
     #[test]
     fn test1() {
-        let tokenizer = tokenizer();
+        let mut tokenizer = tokenizer();
         let mut stream = tokenizer.token_stream("すもももももももものうち");
         let mut tokens = vec![];
         while let Some(token) = stream.next() {
@@ -166,8 +167,24 @@ mod tests {
     }
 
     #[test]
-    fn empty() {
+    fn text_analyzer_builder() {
+        use tantivy::tokenizer::{LowerCaser, TextAnalyzer};
+
         let tokenizer = tokenizer();
+        let mut analyzer = TextAnalyzer::builder(tokenizer).filter(LowerCaser).build();
+        let mut stream = analyzer.token_stream("Rust言語");
+        let mut tokens = vec![];
+        while let Some(token) = stream.next() {
+            tokens.push(token.clone());
+        }
+        assert_eq!(tokens.len(), 2);
+        assert_eq!(tokens[0].text, "rust");
+        assert_eq!(tokens[1].text, "言語");
+    }
+
+    #[test]
+    fn empty() {
+        let mut tokenizer = tokenizer();
         let mut stream = tokenizer.token_stream("");
         let mut tokens = vec![];
         while let Some(token) = stream.next() {

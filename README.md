@@ -8,7 +8,7 @@ A [Tantivy](https://github.com/quickwit-oss/tantivy) tokenizer using [Vibrato](h
 
 ```rust
 let tokenizer = VibratoTokenizer::new("/path/to/dictionary")?;
-let analyzer = TextAnalyzer::from(tokenizer).filter(LowerCaser);
+let analyzer = TextAnalyzer::builder(tokenizer).filter(LowerCaser).build();
 index.tokenizers().register("lang_ja", analyzer);
 ```
 
