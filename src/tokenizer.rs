@@ -167,6 +167,22 @@ mod tests {
     }
 
     #[test]
+    fn text_analyzer_builder() {
+        use tantivy::tokenizer::{LowerCaser, TextAnalyzer};
+
+        let tokenizer = tokenizer();
+        let mut analyzer = TextAnalyzer::builder(tokenizer).filter(LowerCaser).build();
+        let mut stream = analyzer.token_stream("Rust言語");
+        let mut tokens = vec![];
+        while let Some(token) = stream.next() {
+            tokens.push(token.clone());
+        }
+        assert_eq!(tokens.len(), 2);
+        assert_eq!(tokens[0].text, "rust");
+        assert_eq!(tokens[1].text, "言語");
+    }
+
+    #[test]
     fn empty() {
         let mut tokenizer = tokenizer();
         let mut stream = tokenizer.token_stream("");
