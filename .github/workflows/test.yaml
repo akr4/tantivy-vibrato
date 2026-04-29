@@ -1,4 +1,4 @@
-name: CI
+name: Test
 
 on:
   push:
@@ -13,19 +13,42 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt,clippy
+          rustup default stable
 
-      - uses: Swatinem/rust-cache@v2
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Cache vibrato dictionary
+        id: cache-dict
+        uses: actions/cache@v4
+        with:
+          path: system.dic
+          key: vibrato-ipadic-mecab-2_7_0-v0.5.0
 
       - name: Download vibrato dictionary
+        if: steps.cache-dict.outputs.cache-hit != 'true'
         run: |
           curl -sL https://github.com/daac-tools/vibrato/releases/download/v0.5.0/ipadic-mecab-2_7_0.tar.xz | tar xJ
           zstd -d ipadic-mecab-2_7_0/system.dic.zst -o system.dic
 
-      - name: Build
-        run: cargo build
+      - name: Format check
+        run: cargo fmt -- --check
+
+      - name: Clippy
+        run: cargo clippy -- -D warnings
 
       - name: Test
         run: cargo test
