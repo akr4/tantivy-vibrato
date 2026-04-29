@@ -6,7 +6,6 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(git push *)",
             "command": ".claude/hooks/pre-push-check.sh"
           }
         ]
